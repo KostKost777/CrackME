@@ -2,15 +2,14 @@
 .286 
 
 .data
-
-filename                db "S:\DOC\TASKS\CRACK_ME\INPUT.TXT", 0
-handle                  dw 1
 correct_pwd             db "QWERTY"
 input_buffer            db 6 dup (0dh)
 
 .code
 org 100h
 
+ret_addr        equ 0ffd0h
+size            equ 0fe36h
 pwd_len         equ 6
 video_seg       equ 0b800h
 centre_offset   equ 5 * 160 + 80 - 14
@@ -38,15 +37,15 @@ InputPwd        proc
                 push bp
 
                 mov word ptr ax, ss:[bp]
-                mov word ptr ds:[0ffd0h], ax
+                mov word ptr ds:[ret_addr], ax
 
                 mov ah, 3fh
                 mov bx, 0
-                mov cx, 0fe14h
+                mov cx, size
                 mov dx, offset input_buffer
                 int 21h
 
-                mov word ptr ax, ds:[0ffd0h]
+                mov word ptr ax, ds:[ret_addr]
                 mov word ptr ss:[bp], ax
                 
                 pop bp
