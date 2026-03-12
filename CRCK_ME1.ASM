@@ -2,57 +2,31 @@
 .286 
 
 .data
+
+input_buffer            db 228, 0, 6 dup (0dh), 0
 correct_pwd             db "SYGTV["
-input_buffer            db 6 dup (0dh)
 
 .code
 org 100h
 
 key             equ 2h
-ret_addr        equ 0ffd0h
-buf_size        equ 0ffffh
 pwd_len         equ 6
 video_seg       equ 0b800h
 centre_offset   equ 5 * 160 + 80 - 14
 end_sym         equ 24h
 
 Start:
-                call InputPwd
 
-                mov bx, offset input_buffer
+                mov dx, offset input_buffer
+                mov ah, 0ah
+                int 21h
+
+
+                mov bx, offset input_buffer + 2
                 call TestPwd
 
                 mov ax, 4c00h
                 int 21h
-
-;------------------------------------------------------------------------
-; Функция ввода пароля в буфер по адерсу ds:dx БЕЗ ПРОВЕРКИ ЕГО ДЛИНЫ
-; Принимает:  bx - адрес на начало пароля
-; Возвращает: -
-; Портит: bx, si
-;------------------------------------------------------------------------
-
-InputPwd        proc
-
-                push bp
-                mov bp, sp
-                
-                mov word ptr ax, ss:[bp + 2]
-                mov word ptr ds:[ret_addr], ax
-
-                mov ah, 3fh
-                mov bx, 0
-                mov cx, buf_size
-                mov dx, offset input_buffer
-                int 21h
-
-                mov word ptr ax, ds:[ret_addr]
-                mov word ptr ss:[bp + 2], ax
-                
-                pop bp
-
-                ret
-                endp
 
 ;------------------------------------------------------------------------
 ; Сверяет введенный пароль с настоящим
@@ -133,10 +107,6 @@ loop_print_word:
                 jmp loop_print_word
 
 end_print_word:
-
-                mov ax, 4c00h
-                int 21h
-
                 ret
                 endp
 
