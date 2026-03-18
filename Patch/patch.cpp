@@ -1,26 +1,18 @@
-
 #include <stdio.h>
 #include <stdlib.h>
-#include <SFML/Graphics.h>
-#include "graphics.h"
+#include <assert.h>
+#include "patch.h"
 
-int main()
+void MakePatch(char* file_name, int offset, unsigned char* new_bytes, size_t amount)
 {
-    PrintPicture();
-    //MakePatch();
-    return 0;
-}
+    assert(file_name);
+    assert(new_bytes);
 
-void MakePatch()
-{
-    const int OFFSET = 14;
-    unsigned char patch_bytes[] = {0xEA, 0x25, 0x01, 0x88, 0x52};
-
-    FILE* file = fopen("CRCK_BAY.COM", "rb+");
+    FILE* file = fopen(file_name, "rb+");
         
-    fseek(file, OFFSET, 0);
+    fseek(file, offset, 0);
 
-    fwrite(patch_bytes, 1, sizeof(patch_bytes), file);
+    fwrite(new_bytes, 1, amount, file);
 
     fclose(file);
 }

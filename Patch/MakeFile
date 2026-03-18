@@ -1,6 +1,6 @@
 TARGET = patch
 
-SOURCES = patch.cpp graphics.cpp
+SOURCES = patch.cpp graphics.cpp main.cpp
 
 CXX = g++
 
@@ -63,7 +63,6 @@ WARNING_FLAGS = -Wall -Wextra -Weffc++ \
                 -Werror=vla \
 				-fcheck-new \
 				-fsized-deallocation \
-				-fstack-protector \
 				-fstrict-overflow \
 				-flto-odr-type-merging \
 				-pie -fPIE
