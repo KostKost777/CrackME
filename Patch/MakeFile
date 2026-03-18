@@ -1,6 +1,6 @@
 TARGET = patch
 
-SOURCES = patch.cpp graphics.cpp main.cpp
+SOURCES = patch.cpp user_interface.cpp main.cpp
 
 CXX = g++
 
